@@ -1,0 +1,22 @@
+# /etc/systemd/zram-generator.conf
+# Arquivo de configuração padrão do systemd-zram-generator
+# Projeto Zero RAM - Templates para Laptops e Desktops
+
+[zram0]
+# Capacidade lógica do dispositivo:
+# Para laptops com até 8GB RAM: ram
+# Para laptops com 16GB RAM: min(ram / 2, 8192)
+# Para laptops com 32GB+ RAM: min(ram / 2, 16384)
+zram-size = min(ram / 2, 8192)
+
+# Algoritmo de compressão:
+# 'zstd' oferece a melhor relação de compressão (~2.5x a 3x) com excelente taxa de descompressão.
+# 'lz4' prioriza throughput de CPU e menor uso de bateria em processadores mais modestos.
+compression-algorithm = zstd
+
+# Prioridade no subsistema de swap (valores mais altos têm precedência sobre swap em SSD/HDD)
+swap-priority = 100
+
+# Algoritmo de recompressão secundária para páginas frias (utilizando o singleton do rework)
+# recompress = zstd
+# recompress-options = level=16

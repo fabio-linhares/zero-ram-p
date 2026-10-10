@@ -1,0 +1,153 @@
+From patchwork Mon Oct  5 12:20:22 2026
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sergey Senozhatsky <senozhatsky@chromium.org>
+X-Patchwork-Id: 14867895
+Received: from mail-pj2-f12.google.com (mail-pj2-f12.google.com
+ [74.125.227.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825AC480324
+	for <linux-block@vger.kernel.org>; Mon,  5 Oct 2026 12:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+ arc=none smtp.client-ip=74.125.227.140
+ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791202886; cv=none;
+ b=moXXMwRiUCwi+oFQ32DX7XzZVQF7q7DupkIcok/hz+fl0Vlx030Wk9RXR/yfb/TLlEviDdxu45hKD1H7rRjscOD0XDG4i0CFjEHrtqzOTp677VDrvTtK5KezdAlCsjpzioInUw9gANXNqZ0UdRnf4EpfnpocTvnT8g97VL5Cmp4=
+ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791202886; c=relaxed/simple;
+	bh=cjmbppIMXyRMAGCgsAgIdXMu/Hehztl+4Vbc76WLIMk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version;
+ b=UK/mkPXcKqUCHiCu8g8WphGZ7JEvELFF4teoegoROBZipkMmhTyAHzNIZtAt1ospuupJY2sz6gr03Mq721Uk2mzgv+KZtHEUxBxlvTnoI2VZyTXvpuIDE+ocIskOFhOgth5OpfVA/RNKev9kViEHUY21n8iH0IpctnW7xQ7OyuY=
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org;
+ dmarc=pass (p=none dis=none) header.from=chromium.org;
+ spf=pass smtp.mailfrom=chromium.org;
+ dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org
+ header.b=e2hkHvHl; arc=none smtp.client-ip=74.125.227.140
+Authentication-Results: smtp.subspace.kernel.org;
+ dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+ spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org
+ header.b="e2hkHvHl"
+Received: by mail-pj2-f12.google.com with SMTP id
+ 98e67ed59e1d1-396ccb652d7so866158a91.0
+        for <linux-block@vger.kernel.org>;
+ Mon, 05 Oct 2026 05:21:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1791202880; x=1791807680;
+ darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=lBooGZSw2IxfoAxzLlFw+KVKnhFoUqum4OQR7iUI4RU=;
+        b=e2hkHvHl0vUm51qQH+a7mHpxLyTGWKdQSNkc/d7byN5c8B+WbynWAb1iZ7/nuBOF1H
+         +cJFL8/zbqXxS3wKuHJipAUGaYfnUNu6bQvmjWfDQikjmVNOJH9gu/ME5gROC1y6K10J
+         oTIctDeqgrtH/08eFMHYz5xoUDi2m2bcBeP14=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791202880; x=1791807680;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=lBooGZSw2IxfoAxzLlFw+KVKnhFoUqum4OQR7iUI4RU=;
+        b=V1sijopPNAi0HJ7WYeKwemyu6lbWq0eAoVpArw30Mp67CEkc59Ti9Qr82jLsTmd15K
+         f9HINGEuzooEeakuM6zd2e+pGznzzfmRitN6LtzFtSIEimKa9anlMLKy8rHpwtNC13J0
+         nbMqRK+cyoDD+Knb3+KOGzWDzMr8jcO9PqftXKZklsPqZXxlCIF49aSRN4on5EodxGyC
+         AChbQyzdLrlQosKAulnKyFrbpYzx7wWijGtEDN7GzBoa8rFHHXGq3Q/Hvh0absSpqxg7
+         fF5HiUA7pBTlu28WAyRKBK1yV/trtuD+GhSCLNt3UmD+VkxgZQL7ETTD2T4UcunDti27
+         UrYg==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBx3vdYoVhfSnjl6yOhBXLFFoaTnge/dGFdVkGrv9g38qrdmwDlTtOZQAGchuZTiGfdmRys8sqkcBb76dQ==@vger.kernel.org
+X-Gm-Message-State: AFq9FYLbk2XUzwVu9wtPsnFRNHW8cf2Dnkg8KV7KRFc3+MYfMR5IZ2jm
+	MsBf/Q2ly4dgHiSIPquX1HlYffu1n4HID3TCpOUVetliSrz9pHB13yxaBEcfVgYRHw==
+X-Gm-Gg: AYBFou2OYBxzL/f50bxaigYCcjHiZvc/pmH+57/5z0PWIhFJhdR5plM6gmwbzAvZVeD
+	tkB24gSZgJG9UCSjKxVgy3fH8G+uciQvBH1ze4J7hVulrJpgTazuWno55QXaRagzwUPVOaTPnG+
+	wO/D3Dz8wQwQsGXMzSXPjWibWPnJULOvUCNN+WaUGiqF7ZWNvjrl+7HsWZrpBt4TN+mXaYxsFao
+	Bdvxs3FfTnT71mM7tTQ6+MOwDSQuyMnJ635o62YYXrRWgWibOF5iTN0sAgLJ9M/HSw8ZnuZFQWw
+	TUJ73lha3BnX8xaQXCBsUtQHrhfuO9a3p8mgvLsK2Zl5pq1AeRtsR+x/tG36pmiEi3t7pzqnzPl
+	qn7W6HTH1N4PepVJ7SQ5Su1pYt3SBzET1DKUdusBAa14zkGNl4O1EMHF1SGg6TeSsowVKHl4t8F
+	rWSMt7bMutTTOO7S6ZXBOG6CgneDTzF0PVWL67zgRRTPeSrSSx0rSNHLUT1bbKHREqgzxFLjRc9
+	hWCx7aGCdU0hgd6F2KoFT8Fv6Dg9J4ZxxNktKkfD6o3C94DoJ7sFNVJO0gEV/o=
+X-Received: by 2002:a17:90a:fc45:b0:3a4:945e:bc33 with SMTP id
+ 98e67ed59e1d1-3a6ce82bf0dmr6782414a91.47.1791202879907;
+        Mon, 05 Oct 2026 05:21:19 -0700 (PDT)
+Received: from tigeriii.tok.corp.google.com
+ ([2a00:79e0:2031:6:9211:ddf0:3c6a:bf9e])
+        by smtp.gmail.com with ESMTPSA id
+ 98e67ed59e1d1-3a7e4b00de6sm3342997a91.1.2026.10.05.05.21.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Oct 2026 05:21:18 -0700 (PDT)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Brian Geffon <bgeffon@google.com>,
+	Minchan Kim <minchan@kernel.org>,
+	Richard Chang <richardycc@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-mm@kvack.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH 07/10] zram: zstd: do not use kvzalloc() for zstd allocations
+Date: Mon,  5 Oct 2026 21:20:22 +0900
+Message-ID: <20261005122036.718976-8-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
+In-Reply-To: <20261005122036.718976-1-senozhatsky@chromium.org>
+References: <20261005122036.718976-1-senozhatsky@chromium.org>
+Precedence: bulk
+X-Mailing-List: linux-block@vger.kernel.org
+List-Id: <linux-block.vger.kernel.org>
+List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+
+When a dictionary is configured, zstd allocates all of its memory (C/D
+dictionaries, compression and decompression contexts and compression
+workspaces) via zstd_custom_alloc().  zstd_custom_alloc() uses
+kvzalloc(), which falls back to vmalloc() only when kmalloc() fails,
+and kmalloc() rounds such sizes up to a power-of-two number of pages.
+
+For example, on x86_64 with a 110K dictionary, switching from
+kvzalloc() to __vmalloc() reduces allocations from:
+- CDict (level 3):            512 KB -> 400 KB
+- CDict (levels 12+):        2048 KB -> 1552 KB
+- DCtx (per-CPU):             128 KB -> 96 KB
+- CCtx workspace (level 3):   128 KB -> 84 KB (per-CPU)
+- CCtx workspace (level 14+): 1024 KB -> 764 KB (per-CPU)
+
+Use __vmalloc() for allocations larger than PAGE_SIZE (and kzalloc()
+for smaller ones), which is also how zram allocates zstd workspaces
+when no dictionary is configured.  zstd_custom_free() already uses
+kvfree(), which handles both.
+
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Acked-by: Brian Geffon <bgeffon@google.com>
+---
+ drivers/block/zram/backend_zstd.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/block/zram/backend_zstd.c b/drivers/block/zram/backend_zstd.c
+index b367049f131d..7a8b5ff186f2 100644
+--- a/drivers/block/zram/backend_zstd.c
++++ b/drivers/block/zram/backend_zstd.c
+@@ -26,10 +26,17 @@ struct zstd_params {
+ /*
+  * For C/D dictionaries we need to provide zstd with zstd_custom_mem,
+  * which zstd uses internally to allocate/free memory when needed.
++ *
++ * zstd allocations (C/D dictionaries and contexts) are large and
++ * long-lived.  Don't use kvzalloc() for them: when enough physically
++ * contiguous memory is available it serves them from kmalloc(), which
++ * rounds them up to a power-of-two number of pages.
+  */
+ static void *zstd_custom_alloc(void *opaque, size_t size)
+ {
+-	return kvzalloc(size, GFP_NOIO | __GFP_NOWARN);
++	if (size <= PAGE_SIZE)
++		return kzalloc(size, GFP_NOIO | __GFP_NOWARN);
++	return __vmalloc(size, GFP_NOIO | __GFP_NOWARN | __GFP_ZERO);
+ }
+ 
+ static void zstd_custom_free(void *opaque, void *address)
+

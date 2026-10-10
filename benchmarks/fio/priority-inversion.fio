@@ -1,0 +1,40 @@
+; benchmarks/fio/priority-inversion.fio
+; Reprodução do teste adversarial de Sergey Senozhatsky (Patch 09/10)
+; 1 CPU, 4 escritores nice 19, 1 leitor nice -19
+
+[global]
+ioengine=sync
+direct=1
+bs=4k
+size=256m
+time_based
+runtime=15
+ramp_time=2
+group_reporting=0
+
+; Escritores de baixa prioridade (nice 19)
+[writer_low_1]
+rw=write
+nice=19
+cpus_allowed=0
+
+[writer_low_2]
+rw=write
+nice=19
+cpus_allowed=0
+
+[writer_low_3]
+rw=write
+nice=19
+cpus_allowed=0
+
+[writer_low_4]
+rw=write
+nice=19
+cpus_allowed=0
+
+; Leitor de alta prioridade (nice -19)
+[reader_high]
+rw=randread
+nice=-19
+cpus_allowed=0

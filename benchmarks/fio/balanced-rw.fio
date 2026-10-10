@@ -1,0 +1,20 @@
+; benchmarks/fio/balanced-rw.fio
+; Teste neutro de leitura e escrita balanceada (50/50) sem viés de prioridade
+; Mede throughput e distribuição normal de latências
+
+[global]
+ioengine=sync
+direct=1
+bs=4k
+size=256m
+time_based
+runtime=15
+ramp_time=2
+group_reporting=1
+
+[rw_balanced]
+rw=randrw
+rwmixread=50
+numjobs=4
+cpus_allowed=0-3
+nice=0

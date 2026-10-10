@@ -1,0 +1,208 @@
+From patchwork Mon Oct  5 12:20:16 2026
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sergey Senozhatsky <senozhatsky@chromium.org>
+X-Patchwork-Id: 14867889
+Received: from mail-pj2-f40.google.com (mail-pj2-f40.google.com
+ [74.125.227.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B751D36E483
+	for <linux-block@vger.kernel.org>; Mon,  5 Oct 2026 12:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+ arc=none smtp.client-ip=74.125.227.168
+ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791202861; cv=none;
+ b=I9RFw17/m9kERNRO1Rva9MjabGnYnU6kEoaXy5vhnKK0Fen7XWoiBrB420waYjQ0LgaGopovYhzjoxxetszl8B00SJ+Vp3xNdlxgba4pUJppE27PYmjcOgo/CZpEz3SejkoUV/Ck2R4Spl6AqnOcwG9UO9S3b9Mg/KiAUTEQ22c=
+ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791202861; c=relaxed/simple;
+	bh=slNkQmnUGIS6ajBLsCRFg0x0QUKi35JZWyJzNVGOhic=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version;
+ b=mHfsSdh2i+l2qwtqLI5cMCRHic9YsH5H/5bvlz6hb3OANJGRRfpyH3ozBIPK9q5SqRQ3gVw7Z7oUg6xXRTIYzIpxUKba7SWSAUCIECWvooYNEaN268HM8QMSRvtxsxceaCdYlHjhfDHKnkG8J97zH5OR5HnzIn1VFzK7vCVJT00=
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org;
+ dmarc=pass (p=none dis=none) header.from=chromium.org;
+ spf=pass smtp.mailfrom=chromium.org;
+ dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org
+ header.b=HtBk4PWS; arc=none smtp.client-ip=74.125.227.168
+Authentication-Results: smtp.subspace.kernel.org;
+ dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+ spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org
+ header.b="HtBk4PWS"
+Received: by mail-pj2-f40.google.com with SMTP id
+ 98e67ed59e1d1-3a2adb9bc3cso789272a91.2
+        for <linux-block@vger.kernel.org>;
+ Mon, 05 Oct 2026 05:20:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1791202859; x=1791807659;
+ darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=qBy3Qhx5x3GHz21HDgx33swSeoCPkTH3zJT6nvmx4+w=;
+        b=HtBk4PWSe+tpYChFsaxTvyiucGio87ILe1Sz1zW+D7PW2CnvEADkKpPTdNqCGRMa4s
+         Ao0MGkDRu4LZ21ERUC6qt5f8gcfCaRBDFp8WNSE3oYzuYB5Utc8ZJ4ZhlC4l+vKzI6JS
+         0afe5sDMu/EzTGwkX/VvATZQ4xhThWaeF+pDQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791202859; x=1791807659;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=qBy3Qhx5x3GHz21HDgx33swSeoCPkTH3zJT6nvmx4+w=;
+        b=PA0Rq8DOo5qxKuKw95yU8Tc2GWQU7zlFugQ7cgocYeRlz4CdpyuS4Urjopcbk3wDu1
+         Ay2Tpq/nqd8wMTAw0ZyuPEoyuO0gsJERmIJLCEmiHVWPGrpfg7eaeVyR2iSIdjcYb00+
+         j1HxdH4Z3P8OMEt6yTOWnqNYSAdr8r2A16wGuHqim6CbO13ohip0QDytX5cAyh1Flrce
+         fAQlElTKzTswpWsWsWlvaUZSNUFBJtFshusB/1W5TtE9GTi7mHbIrvCa/rmh1M77XO22
+         yyKJN2ql64+d1Xs52WXWde0yyYfmShNnJzMSVg2gXrl8cyRyJXSbHPfv4tXyI8Lhe/EH
+         EsWA==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBzMfq9QL2ziFXijzDlWD/77G9OIRnOwWjCuurttDX3GZkMAjgbCiIBwh0EskwW3ZIoZJXzP8BsQVdynmQ==@vger.kernel.org
+X-Gm-Message-State: AFq9FYKmanqZccojgsdjBypBhBglRYI69sSJUeVXGh5qlhbh8YO4hkaR
+	01H+jKBvKVtQuuHLlGazGYSMsnZxdBkNIDigy8oR7FijiV9zLdYe48JiWzWUdrpVRQ==
+X-Gm-Gg: AYBFou0PfHB6oxoeXt9EamT1qIxWxFDMH6m/WsZl2Vzu19VsUXNA0I6zsyR8oId9NrD
+	cKcBR5LNlkbA8yCJBVcGsKrxVCwNEtytJ5XJT4A6lm3ZAsQBgsJbnHTQqZ6VW2/qZlraxw4Aex4
+	C334SzNwjX5L4D/Zku1Ry3IynXIOc7Bi4m0GOQ71BUtccFZzJ4nuErCvi2KaZhqfvlqet/NBiCZ
+	1t+qkbNN42iC5GIsHy+6Co1GtvZj5IYd45OAcQTsr6Y9p19LY+A/e8CDIP1QUnnZNSuJhvwjlxN
+	/CMdXMXhoSW9jJV4Zg7iYrFQES1PZBZB5eRCdkRhoMsI8iLfCwONgFAYiDkX5/eTXmfGq9nmp83
+	AVIoPNwPVEccVFxMKchOnM9NtwY008zae4/r5vJv+rVZbbYAExLo6cg6Y0m4YROPrdBGuy5t3ZN
+	mtzvKj9QKoYyh640OaLY6Ua5/5XYqZZzLnfQl6JdkhInh6h2aYl7wY7megG12vQ4G+JOS5i7ixo
+	vvI+seV1K5SjzOTZLIdkWtmQk6NGBygCbLK5PNYwkB7e6lcsGTAZ1NllC56l0g=
+X-Received: by 2002:a17:90b:2791:b0:3a8:e2c:af52 with SMTP id
+ 98e67ed59e1d1-3a80e2cb9c7mr810510a91.24.1791202858970;
+        Mon, 05 Oct 2026 05:20:58 -0700 (PDT)
+Received: from tigeriii.tok.corp.google.com
+ ([2a00:79e0:2031:6:9211:ddf0:3c6a:bf9e])
+        by smtp.gmail.com with ESMTPSA id
+ 98e67ed59e1d1-3a7e4b00de6sm3342997a91.1.2026.10.05.05.20.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Oct 2026 05:20:54 -0700 (PDT)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Brian Geffon <bgeffon@google.com>,
+	Minchan Kim <minchan@kernel.org>,
+	Richard Chang <richardycc@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-mm@kvack.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH 01/10] zram: prefix backends printk-s
+Date: Mon,  5 Oct 2026 21:20:16 +0900
+Message-ID: <20261005122036.718976-2-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
+In-Reply-To: <20261005122036.718976-1-senozhatsky@chromium.org>
+References: <20261005122036.718976-1-senozhatsky@chromium.org>
+Precedence: bulk
+X-Mailing-List: linux-block@vger.kernel.org
+List-Id: <linux-block.vger.kernel.org>
+List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+
+Currently, zram backends prefix printk-s with their names,
+which may look a little confusing, e.g.
+
+	[   30.859567] zstd: alloc size 408128
+
+In addition, prefix backend names with "zram:" so it's
+clear that the message is coming from a zram backend.
+
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+---
+ drivers/block/zram/backend_842.c     | 2 +-
+ drivers/block/zram/backend_deflate.c | 2 +-
+ drivers/block/zram/backend_lz4.c     | 2 +-
+ drivers/block/zram/backend_lz4hc.c   | 2 +-
+ drivers/block/zram/backend_lzo.c     | 2 +-
+ drivers/block/zram/backend_lzorle.c  | 2 +-
+ drivers/block/zram/backend_zstd.c    | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/block/zram/backend_842.c b/drivers/block/zram/backend_842.c
+index 3846a04c69d7..56ffda201727 100644
+--- a/drivers/block/zram/backend_842.c
++++ b/drivers/block/zram/backend_842.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#define pr_fmt(fmt) "842: " fmt
++#define pr_fmt(fmt) "zram: 842: " fmt
+ 
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+diff --git a/drivers/block/zram/backend_deflate.c b/drivers/block/zram/backend_deflate.c
+index f71b11bcac78..20685aca9bdc 100644
+--- a/drivers/block/zram/backend_deflate.c
++++ b/drivers/block/zram/backend_deflate.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#define pr_fmt(fmt) "deflate: " fmt
++#define pr_fmt(fmt) "zram: deflate: " fmt
+ 
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+diff --git a/drivers/block/zram/backend_lz4.c b/drivers/block/zram/backend_lz4.c
+index 1e4ad31d39a6..158fd8b5e8a9 100644
+--- a/drivers/block/zram/backend_lz4.c
++++ b/drivers/block/zram/backend_lz4.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#define pr_fmt(fmt) "lz4: " fmt
++#define pr_fmt(fmt) "zram: lz4: " fmt
+ 
+ #include <linux/kernel.h>
+ #include <linux/lz4.h>
+diff --git a/drivers/block/zram/backend_lz4hc.c b/drivers/block/zram/backend_lz4hc.c
+index d8aa01bb258f..5c009835a684 100644
+--- a/drivers/block/zram/backend_lz4hc.c
++++ b/drivers/block/zram/backend_lz4hc.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#define pr_fmt(fmt) "lz4hc: " fmt
++#define pr_fmt(fmt) "zram: lz4hc: " fmt
+ 
+ #include <linux/kernel.h>
+ #include <linux/lz4.h>
+diff --git a/drivers/block/zram/backend_lzo.c b/drivers/block/zram/backend_lzo.c
+index d83f92cf757c..78538479c511 100644
+--- a/drivers/block/zram/backend_lzo.c
++++ b/drivers/block/zram/backend_lzo.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#define pr_fmt(fmt) "lzo: " fmt
++#define pr_fmt(fmt) "zram: lzo: " fmt
+ 
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+diff --git a/drivers/block/zram/backend_lzorle.c b/drivers/block/zram/backend_lzorle.c
+index 1b120d062c92..011787f1430b 100644
+--- a/drivers/block/zram/backend_lzorle.c
++++ b/drivers/block/zram/backend_lzorle.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#define pr_fmt(fmt) "lzo-rle: " fmt
++#define pr_fmt(fmt) "zram: lzo-rle: " fmt
+ 
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+diff --git a/drivers/block/zram/backend_zstd.c b/drivers/block/zram/backend_zstd.c
+index 08da3810cffd..127976b5455b 100644
+--- a/drivers/block/zram/backend_zstd.c
++++ b/drivers/block/zram/backend_zstd.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#define pr_fmt(fmt) "zstd: " fmt
++#define pr_fmt(fmt) "zram: zstd: " fmt
+ 
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+

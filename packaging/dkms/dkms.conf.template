@@ -1,0 +1,15 @@
+# packaging/dkms/dkms.conf
+# Configuração DKMS para o Módulo de Kernel Zero RAM (Rework de zcomp v2)
+
+PACKAGE_NAME="zero-ram"
+PACKAGE_VERSION="2.0"
+BUILT_MODULE_NAME[0]="zram"
+DEST_MODULE_LOCATION[0]="/updates/dkms"
+AUTOINSTALL="yes"
+
+# Para instalar via DKMS no Samsung ou em qualquer máquina:
+# sudo cp -r src/module /usr/src/zero-ram-2.0
+# sudo cp packaging/dkms/dkms.conf /usr/src/zero-ram-2.0/
+# sudo dkms add -m zero-ram -v 2.0
+# sudo dkms build -m zero-ram -v 2.0
+# sudo dkms install -m zero-ram -v 2.0

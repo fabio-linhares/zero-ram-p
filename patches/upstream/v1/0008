@@ -1,0 +1,145 @@
+From patchwork Mon Oct  5 12:20:23 2026
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sergey Senozhatsky <senozhatsky@chromium.org>
+X-Patchwork-Id: 14867896
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com
+ [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF4C7262E
+	for <linux-block@vger.kernel.org>; Mon,  5 Oct 2026 12:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+ arc=none smtp.client-ip=209.85.215.176
+ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791202889; cv=none;
+ b=pYDdWp+cNr8mtUFvD1fWAVB1TtLBBMYfAH01xDT+HMVQBwEgvbvlWh6cCsGqagjZbgPPcj37jlt6aQs4e9SP8o7InLzv3x+hX6Cg2WufaWMN8hnEO4ofAKhmtF1Fe1zlspyrKFZeXK5HvzoWLyTlH3nKVWqSrVRDnwfEmK4smn4=
+ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791202889; c=relaxed/simple;
+	bh=TsYDKEkC7DrnJjoJ3bjAVeXMyRvjIspkjmI/66uJvgU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version;
+ b=TaCGNu8vfBiun9p23nxlNLtL60BnePna4HMIsXExg54unBZn4fGcMy20vwr3KqkH59v2btX1gTAItNgMNHysAA+VoSZ0kBQFGD8e1o0PxEp1LBKFNgzsQuSZYAeIychooP9Vv2h92EWCayf/OgSgJdX3rTFa8dgWZteXo9jupuA=
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org;
+ dmarc=pass (p=none dis=none) header.from=chromium.org;
+ spf=pass smtp.mailfrom=chromium.org;
+ dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org
+ header.b=lq1LDvU1; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org;
+ dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+ spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org
+ header.b="lq1LDvU1"
+Received: by mail-pg1-f176.google.com with SMTP id
+ 41be03b00d2f7-cc4c02ddd62so569054a12.0
+        for <linux-block@vger.kernel.org>;
+ Mon, 05 Oct 2026 05:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1791202882; x=1791807682;
+ darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=JEfqKq8AUXff9rV1VBfaaWIWwsRhsIZ+aEa8DBn6+DQ=;
+        b=lq1LDvU1MSLUbGEFw8gTcDcoyGTw4rtn7sOPFDbOu6JJZHhVeHGu5Eilpp/fmmKRvc
+         XroKCuAwln6Awl3fJdhVRik+kKPtZjuNEQYSvtz3fFpNk0KbjCDvsvcKKxbyvszHI3wH
+         v6Pv2FYGWC+hEVnTUCBZPSpRZdaa9fDPN14uk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791202882; x=1791807682;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=JEfqKq8AUXff9rV1VBfaaWIWwsRhsIZ+aEa8DBn6+DQ=;
+        b=BjAknTMJq4ipbN6+e/K4eLxoqZBlx9AyeFNZPoVpwURn7YhN2ls7uhQ9Zi797TaEfI
+         YJrKljwwdN8uk/RW+jNkF2mdZ2FKbsR7R6UcEiYxuh6gJ1Vb4r06TetI53gzktUdcjy8
+         N0mq6F6pOySLEBdbheAqryylk9pVvvIffzQt02HIvuAYu+mVSDTf4/giB7gctwMyXsn3
+         F7ZpcmfM77iXRwwcnYnfxBLP9jZVlIM19cnh1tgS/8NFgncEIXnm31YNjCFTj2rHZnfE
+         tgnlZ3fmdptX8pPmUlr31uQn7La2enQIi2K4ZNykViu8yuqzdjprbyr8ClRnh4ptFMIJ
+         i1/g==
+X-Forwarded-Encrypted: i=1;
+ AKwUvByw+4nBplNUYpXJUBMVL4UFomSVe1Xqhk0jSUbn0wFK4QwBk9QY0aKWfxxgPWUFCLjwElIqczyMaUEx0Q==@vger.kernel.org
+X-Gm-Message-State: AFq9FYINV8cj4cXc7guacwZfncAMhJgUzZE5YFjglJyDntQ/FY2Eo1+d
+	XKcZgbjOmmPTfvFR5prrxlLVrUXDwAzkaKknM0mqzWBJ1nRDbNE4JjN2U7cfEJ3aPg==
+X-Gm-Gg: AYBFou3TnS6+KQXQoh/37hPOFdeUtxkmeBiJcHqRj6qG33QqTtXubKC0imPfv4EqQkx
+	qITnVLYhb3oN1xEw5G7GLP4AKFuAQcSDDBy0imIDSzyzlBjnrOh+AZSeh6wIhUYS166CgWlQkFj
+	I0nQv0GaRfDEzDHxLkppb9VQgFPlVXR4qFUArckimxuc7NB37PcHnwUtF2xBTxJCFkPVC4+fu3i
+	6h8ACsvy+R6I491ZEd0vox1pmGHu/A/5UAtbHU3KEmvBWOcGqGW6fSLWZlkWCglsPr1jiL9xsHy
+	uJadjZ7EOMrY6GLg8h0by9EjejgZJOTYvvkeH7Trzc1Eq+aRDd6bhMO18R+pG5ThVbv1CJKvIPk
+	VPNhK35KnKUnPDQzDIeB37GAa7EsbT7xtvrS1/VcGLx32PWuX+1ALH7Zf3lHUkpwHQDkuBl4rxy
+	pqq1KhdBOJUbzeIFf1qUuqN3Dr7y1ZbhlPeCnaE8V74HYAB4ePe7CJbA7fMLLZlsyYNPLinLxLJ
+	FoOV6h0jOzRAajfGmEr3/nelrtIOVDbxBIsLXpScssRu+8WOorXa4G5zCGhvOI=
+X-Received: by 2002:a17:90b:380f:b0:3a4:eebd:2410 with SMTP id
+ 98e67ed59e1d1-3a7873df65amr5816685a91.37.1791202882532;
+        Mon, 05 Oct 2026 05:21:22 -0700 (PDT)
+Received: from tigeriii.tok.corp.google.com
+ ([2a00:79e0:2031:6:9211:ddf0:3c6a:bf9e])
+        by smtp.gmail.com with ESMTPSA id
+ 98e67ed59e1d1-3a7e4b00de6sm3342997a91.1.2026.10.05.05.21.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Oct 2026 05:21:21 -0700 (PDT)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Brian Geffon <bgeffon@google.com>,
+	Minchan Kim <minchan@kernel.org>,
+	Richard Chang <richardycc@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-mm@kvack.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH 08/10] zram: reset writeback state in zram_reset_device()
+Date: Mon,  5 Oct 2026 21:20:23 +0900
+Message-ID: <20261005122036.718976-9-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
+In-Reply-To: <20261005122036.718976-1-senozhatsky@chromium.org>
+References: <20261005122036.718976-1-senozhatsky@chromium.org>
+Precedence: bulk
+X-Mailing-List: linux-block@vger.kernel.org
+List-Id: <linux-block.vger.kernel.org>
+List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+
+Reset all writeback state to its initial defaults on device reset.
+We used to keep writeback related data in zram->stats, which
+zram_reset_device() clears, but commit 1d69a3f8ae77 ("zram: idle
+writeback fixes and cleanup") moved it (along with the newly added
+wb_limit_enable) to struct zram, after which neither of them was
+reset anymore.  wb_batch_size and compressed_wb, which were added
+later, are not reset either.
+
+Fixes: 1d69a3f8ae77 ("zram: idle writeback fixes and cleanup")
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Acked-by: Brian Geffon <bgeffon@google.com>
+---
+ drivers/block/zram/zram_drv.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 593fa4ae47c4..0e1aa0da11aa 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -694,6 +694,7 @@ static void reset_bdev(struct zram *zram)
+ 	zram->disk->fops = &zram_devops;
+ 	kvfree(zram->bitmap);
+ 	zram->bitmap = NULL;
++	zram->nr_pages = 0;
+ }
+ 
+ static ssize_t backing_dev_show(struct device *dev,
+@@ -2881,6 +2882,12 @@ static void zram_reset_device(struct zram *zram)
+ 	zram_destroy_comps(zram);
+ 	memset(&zram->stats, 0, sizeof(zram->stats));
+ 	reset_bdev(zram);
++#ifdef CONFIG_ZRAM_WRITEBACK
++	zram->wb_limit_enable = false;
++	zram->bd_wb_limit = 0;
++	zram->wb_batch_size = 32;
++	zram->compressed_wb = false;
++#endif
+ }
+ 
+ static ssize_t disksize_store(struct device *dev, struct device_attribute *attr,
+

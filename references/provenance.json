@@ -1,0 +1,213 @@
+{
+  "project": "Zero RAM",
+  "series_title": "zram: redesign zcomp and rework backends",
+  "submitter": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+  "collaborator": "Barry Song <v-songbaohua@oppo.com>",
+  "archive_source": "https://patchwork.kernel.org/project/linux-block/list/?q=zcomp",
+  "v1": {
+    "series_id": 1179614,
+    "date": "2026-10-05T12:20:00Z",
+    "mbox": "patches/upstream/series-v1.mbox",
+    "patch_count": 10,
+    "patches": [
+      {
+        "file": "0001",
+        "subject": "[PATCH 01/10] zram: prefix backends printk-s",
+        "message_id": "20261005122036.718976-2-senozhatsky@chromium.org",
+        "date": "Mon,  5 Oct 2026 21:20:16 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "e17f59b2348b90158c2272b3398ded08953564e707f998c1bd8e2152eff1877c",
+        "size_bytes": 9251
+      },
+      {
+        "file": "0002",
+        "subject": "[PATCH 02/10] zram: remove debugfs entry on init failure",
+        "message_id": "20261005122036.718976-3-senozhatsky@chromium.org",
+        "date": "Mon,  5 Oct 2026 21:20:17 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "6df4c85c7885ed09ba717e4b6e820a6df4d4c18b82d0534ec148c4b03e1e6625",
+        "size_bytes": 6529
+      },
+      {
+        "file": "0003",
+        "subject": "[PATCH 03/10] zram: zstd: do not allocate empty C/D-dictionaries",
+        "message_id": "20261005122036.718976-4-senozhatsky@chromium.org",
+        "date": "Mon,  5 Oct 2026 21:20:18 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "32255ab6eafdfb7d52f75dd981e993bdde3357f647943768244a231a3eb18a87",
+        "size_bytes": 6745
+      },
+      {
+        "file": "0004",
+        "subject": "[PATCH 04/10] zram: lz4hc: pre-initialize dictionary stream in  setup_params",
+        "message_id": "20261005122036.718976-5-senozhatsky@chromium.org",
+        "date": "Mon,  5 Oct 2026 21:20:19 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "4cd60fdb325921d313e9c48b2c62fd10c840aa05976c8c1a63797c2af5ef0d9a",
+        "size_bytes": 8161
+      },
+      {
+        "file": "0005",
+        "subject": "[PATCH 05/10] zram: lz4: use LZ4_decompress_safe_usingDict()",
+        "message_id": "20261005122036.718976-6-senozhatsky@chromium.org",
+        "date": "Mon,  5 Oct 2026 21:20:20 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "752873d875ccac82fabe1da877759eb5f05230746d9b4f57b0bce68dca179f3d",
+        "size_bytes": 10113
+      },
+      {
+        "file": "0006",
+        "subject": "[PATCH 06/10] zram: lz4hc: use LZ4_decompress_safe_usingDict()",
+        "message_id": "20261005122036.718976-7-senozhatsky@chromium.org",
+        "date": "Mon,  5 Oct 2026 21:20:21 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "6050292004d7363d2ec0569a2fb42744f7a21e12ed849a5eb216e7235ed12c79",
+        "size_bytes": 9610
+      },
+      {
+        "file": "0007",
+        "subject": "[PATCH 07/10] zram: zstd: do not use kvzalloc() for zstd allocations",
+        "message_id": "20261005122036.718976-8-senozhatsky@chromium.org",
+        "date": "Mon,  5 Oct 2026 21:20:22 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "a7dc6e3fac13d2c5dd5ddf8c8fe9fed4d0f8d846057fe13ef6bab247eb937168",
+        "size_bytes": 7942
+      },
+      {
+        "file": "0008",
+        "subject": "[PATCH 08/10] zram: reset writeback state in zram_reset_device()",
+        "message_id": "20261005122036.718976-9-senozhatsky@chromium.org",
+        "date": "Mon,  5 Oct 2026 21:20:23 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "4f2261946c408fea50d655ab5632eea4c5d3b0df63bade8b1bfb8bfdd548c8d9",
+        "size_bytes": 7301
+      },
+      {
+        "file": "0009",
+        "subject": "[PATCH 09/10] zram: split zcomp into separate R/W streams",
+        "message_id": "20261005122036.718976-10-senozhatsky@chromium.org",
+        "date": "Mon,  5 Oct 2026 21:20:24 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "c3faf2d91639ff2509c13e105034cac7300aa123698c4f9e9912f7e4f4095568",
+        "size_bytes": 35725
+      },
+      {
+        "file": "0010",
+        "subject": "[PATCH 10/10] zram: use a singleton compression context for  recompression",
+        "message_id": "20261005122036.718976-11-senozhatsky@chromium.org",
+        "date": "Mon,  5 Oct 2026 21:20:25 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "43b19208c6716ff8e349d211a26fd7b677f3d15b2030fe0733d5a0421368def9",
+        "size_bytes": 14177
+      }
+    ]
+  },
+  "v2": {
+    "series_id": 1182147,
+    "date": "2026-10-09T07:11:00Z",
+    "mbox": "patches/upstream/series-v2.mbox",
+    "patch_count": 11,
+    "patches": [
+      {
+        "file": "0001",
+        "subject": "[PATCH v2 01/11] zram: prefix backends printk-s",
+        "message_id": "20261009071157.3730698-2-senozhatsky@chromium.org",
+        "date": "Fri,  9 Oct 2026 16:11:24 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "d11b314dbbb9b1174bbfc63a06f81e41a104f01e8e113b5684022154ddab99cf",
+        "size_bytes": 9257
+      },
+      {
+        "file": "0002",
+        "subject": "[PATCH v2 02/11] zram: remove debugfs entry on init failure",
+        "message_id": "20261009071157.3730698-3-senozhatsky@chromium.org",
+        "date": "Fri,  9 Oct 2026 16:11:25 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "73491f8d83401b3e96f9a0933bcf20287605f2601cf0de0a603b3c69b99c0c83",
+        "size_bytes": 6536
+      },
+      {
+        "file": "0003",
+        "subject": "[PATCH v2 03/11] zram: zstd: do not allocate empty C/D-dictionaries",
+        "message_id": "20261009071157.3730698-4-senozhatsky@chromium.org",
+        "date": "Fri,  9 Oct 2026 16:11:26 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "16ad8427196ebbb61ac9fba222de89aed8c18e36cee71765dc747a682dc920ed",
+        "size_bytes": 6738
+      },
+      {
+        "file": "0004",
+        "subject": "[PATCH v2 04/11] zram: lz4hc: pre-initialize dictionary stream in  setup_params",
+        "message_id": "20261009071157.3730698-5-senozhatsky@chromium.org",
+        "date": "Fri,  9 Oct 2026 16:11:27 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "a46570cb9291bb32632af19fb6dae89abe854e9ce4c0eceb7378debfd0acaea8",
+        "size_bytes": 8167
+      },
+      {
+        "file": "0005",
+        "subject": "[PATCH v2 05/11] zram: lz4: use LZ4_decompress_safe_usingDict()",
+        "message_id": "20261009071157.3730698-6-senozhatsky@chromium.org",
+        "date": "Fri,  9 Oct 2026 16:11:28 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "0dd36ccd6813b26dfdd1946c11aa1379084375a3ee337852b8d8fd9ba180c088",
+        "size_bytes": 10118
+      },
+      {
+        "file": "0006",
+        "subject": "[PATCH v2 06/11] zram: lz4hc: use LZ4_decompress_safe_usingDict()",
+        "message_id": "20261009071157.3730698-7-senozhatsky@chromium.org",
+        "date": "Fri,  9 Oct 2026 16:11:29 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "d9da0ca88ec0f5fff3c2104a5251a9e0a1dd270084c473f3bea1ed877e5f4a7e",
+        "size_bytes": 9601
+      },
+      {
+        "file": "0007",
+        "subject": "[PATCH v2 07/11] zram: zstd: do not use kvzalloc() for zstd  allocations",
+        "message_id": "20261009071157.3730698-8-senozhatsky@chromium.org",
+        "date": "Fri,  9 Oct 2026 16:11:30 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "e29c7a077fd6e64db1789102dedf64072af5b2fc4c4fbf9af78a51e5398e71c8",
+        "size_bytes": 7947
+      },
+      {
+        "file": "0008",
+        "subject": "[PATCH v2 08/11] zram: reset writeback state in zram_reset_device()",
+        "message_id": "20261009071157.3730698-9-senozhatsky@chromium.org",
+        "date": "Fri,  9 Oct 2026 16:11:31 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "305608ded0114b405823eca6f0d91f8502bf08686914e4eb04db83e5337c226e",
+        "size_bytes": 7303
+      },
+      {
+        "file": "0009",
+        "subject": "[PATCH v2 09/11] zram: split zcomp into separate R/W streams",
+        "message_id": "20261009071157.3730698-10-senozhatsky@chromium.org",
+        "date": "Fri,  9 Oct 2026 16:11:32 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "a57a0011b33f5aa541d3d42fc2690e48f27ab17a5f8fe0660d46e3e91de9d91b",
+        "size_bytes": 35732
+      },
+      {
+        "file": "0010",
+        "subject": "[PATCH v2 10/11] zram: use a singleton compression context for  recompression",
+        "message_id": "20261009071157.3730698-11-senozhatsky@chromium.org",
+        "date": "Fri,  9 Oct 2026 16:11:33 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "aea2a97a4984371c83399495fed2d0bef5c7ba3579cd7147a62269a7fd4a1e0d",
+        "size_bytes": 14159
+      },
+      {
+        "file": "0011",
+        "subject": "[PATCH v2 11/11] zram: use rw_semaphore for decompression streams",
+        "message_id": "20261009071157.3730698-12-senozhatsky@chromium.org",
+        "date": "Fri,  9 Oct 2026 16:11:34 +0900",
+        "author": "Sergey Senozhatsky <senozhatsky@chromium.org>",
+        "sha256": "3eb937f458db7f925aa1aa406b9e09e61a5e738af09a411b0b4e5ba406405c67",
+        "size_bytes": 12846
+      }
+    ],
+    "key_addition": "Patch 11/11 introduced rw_semaphore for decompression streams to mitigate Reader-Reader priority inversion"
+  }
+}

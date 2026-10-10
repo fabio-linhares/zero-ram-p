@@ -1,0 +1,126 @@
+From patchwork Mon Oct  5 12:20:17 2026
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Sergey Senozhatsky <senozhatsky@chromium.org>
+X-Patchwork-Id: 14867890
+Received: from mail-pz2-f40.google.com (mail-pz2-f40.google.com
+ [74.125.228.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CED47F793
+	for <linux-block@vger.kernel.org>; Mon,  5 Oct 2026 12:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+ arc=none smtp.client-ip=74.125.228.40
+ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1791202868; cv=none;
+ b=o/L/IeAD/dw85iGhLX7VfYBgMonXggYPLAM5PDrMWcGPyjGu4XLDUNVLrinI7WATY0+YBAu2XQEbYE+MUGVssNBa2ZJQmnmgAXNgc7zeEhnh9tUfiUxWD07xMDkDxdKlXpcjruaQt9bOgs9K7iW6JKUe2W0mw4LuAC4nrQhlbps=
+ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1791202868; c=relaxed/simple;
+	bh=LkJh0bZDBjHTYXjvwEA9RETJEVzSQsIcUxtROLN697o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version;
+ b=AwwiTR8milkJlq5EGCOsVNqGHYzOl0VqfY3OdJ3NtYNVNb8MzAhLfJJyDr2/T01Gdoph+PELbmapASc+Nag3ZM62Vyu2dQOnpDwWfVaewOR2NPXr/MrQvYqZ1T+uT6QKwzskljpRgdzbnp/Px003MqR+UBqatcaQmYNDSgOkLiE=
+ARC-Authentication-Results: i=1; smtp.subspace.kernel.org;
+ dmarc=pass (p=none dis=none) header.from=chromium.org;
+ spf=pass smtp.mailfrom=chromium.org;
+ dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org
+ header.b=KgRQU3ZI; arc=none smtp.client-ip=74.125.228.40
+Authentication-Results: smtp.subspace.kernel.org;
+ dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+ spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org
+ header.b="KgRQU3ZI"
+Received: by mail-pz2-f40.google.com with SMTP id
+ 41be03b00d2f7-cc74520b20bso346461a12.1
+        for <linux-block@vger.kernel.org>;
+ Mon, 05 Oct 2026 05:21:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1791202865; x=1791807665;
+ darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=CIJjn31Exx0UajaxWOy2nTiUgkoHCFckWpJVBld8pBw=;
+        b=KgRQU3ZI4D3wvmEAZu70FbZr/2RMjRyPjBA4KjC78aAzJkFP4a8hTjvTCkW21r+JEX
+         idhfxVTvhkn6gd3mmMavPx77GtyrkQlv1OECIScuUnLP3ALhBGm9uFWIijfHaAuEXcCY
+         KaHgpLZM1DWu1Zj+Gtc9WOjSuFkNaU3A1baU0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1791202865; x=1791807665;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=CIJjn31Exx0UajaxWOy2nTiUgkoHCFckWpJVBld8pBw=;
+        b=ila/JVIaFAVRrbWKZGIncJK6qV7FzHViAtfF/4+5krz88eJOHwRo1GpWNoYZycdBmd
+         Q8AfIi0V/OFFFpgIDNG4Oozk9vjdhq9eA+anL+dAiLGQtDyMGo9JGbELw7eucC1CShzZ
+         MEA0SZfAqjg37rgXefQBpflJ5LCZSLqccM04qs1gbwevRBJdmk/8xEWcm7CXiYSqDD8t
+         mOWJ1qYVg+UekSjj7WoLPzjBXTGdV0gmzeSzA7ubZKLFlPQ/g6etqeirSfQ/J2YWvKjB
+         szNyusqXFrGKl0uMqRYVcNf9AByjBq93awp36snEqBq9dttxWIOLpkEwZz3TGnvYz6UP
+         +dng==
+X-Forwarded-Encrypted: i=1;
+ AKwUvBzXhNM36GtlN//SYTVzRYJNf//eAKHw+eNWCynrph23SPh0JA2daW/J48Kjm2oqOHdAQ0tDhYtIs803bg==@vger.kernel.org
+X-Gm-Message-State: AFq9FYLcQaxVNbe0C1GaLpxqBsObc4dl67DhTVnIDS9lQAQOrNEN+PbU
+	gokrIryXmbVdaeDoKJRSrxJEWcYgPLAhC2jYfMP1TBxfGtwKj9lWJgxLGrQDwXF0xQ==
+X-Gm-Gg: AYBFou1yJCDMLC+knb2A1GGzv1fErfbm/aztsV+v1MGnP3xHf2oKl2S4LOsP/jJljuT
+	kYPZGj45aX6aWUwcQESLrSf9ooIL7th81UE4lf5gV2SuvCoDrptByJv1X6sL6/Wxyc3uhEKtO79
+	CMwG/mMIDEeG321/6N4QjhKU3tGBxJOQ/JhplThp7RSawKbienxcI0hCnO+kmjNWc0LLfuVdMHt
+	Z631sLmj+W2nK6RrrhEkoJU9xSmClmm+EhMY/nMh6BtLtahjzbPw+bS4KubauuJZTTigQJh/Eff
+	5QZxFKESBcCTDVFiL1U4SlfbeF9FIVjNLuJ6nuLHIa2cdDusZICbEdnyRGoJ0dLWMDHcoCHTh5L
+	d4fOx/mZov9BMlLqA6IWTn6WMs7nr2fdvHLIHbtK1IheK8Blaa36xsMbxIvridqnX0qBrM8qsrU
+	l73XfZEr0PH6zMGAFuq6wryLap1Aj3O2lIBdyqebklnkQqoMn6jjzP0pwntgKGVtkvZWNnLvT6E
+	fAGXf7HpUjRmmgR5QcLAnU3LxPyXFHQz9RihtnkV9RA2ZC5Eq00ot2irB1bNGA=
+X-Received: by 2002:a17:90a:e7c2:b0:3a4:7730:755e with SMTP id
+ 98e67ed59e1d1-3a6ceb05570mr6709940a91.26.1791202865649;
+        Mon, 05 Oct 2026 05:21:05 -0700 (PDT)
+Received: from tigeriii.tok.corp.google.com
+ ([2a00:79e0:2031:6:9211:ddf0:3c6a:bf9e])
+        by smtp.gmail.com with ESMTPSA id
+ 98e67ed59e1d1-3a7e4b00de6sm3342997a91.1.2026.10.05.05.20.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Oct 2026 05:21:01 -0700 (PDT)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Brian Geffon <bgeffon@google.com>,
+	Minchan Kim <minchan@kernel.org>,
+	Richard Chang <richardycc@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-mm@kvack.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH 02/10] zram: remove debugfs entry on init failure
+Date: Mon,  5 Oct 2026 21:20:17 +0900
+Message-ID: <20261005122036.718976-3-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.56.0.rc1.315.gc6ed9934b7-goog
+In-Reply-To: <20261005122036.718976-1-senozhatsky@chromium.org>
+References: <20261005122036.718976-1-senozhatsky@chromium.org>
+Precedence: bulk
+X-Mailing-List: linux-block@vger.kernel.org
+List-Id: <linux-block.vger.kernel.org>
+List-Subscribe: <mailto:linux-block+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-block+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+
+Do not leak the debugfs entry when zram_init() fails to register
+the block device.
+
+Fixes: c0265342bff4 ("zram: introduce zram memory tracking")
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+---
+ drivers/block/zram/zram_drv.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index ab064c84b092..593fa4ae47c4 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -3297,6 +3297,7 @@ static int __init zram_init(void)
+ 	if (zram_major <= 0) {
+ 		pr_err("Unable to get major number\n");
+ 		class_unregister(&zram_control_class);
++		zram_debugfs_destroy();
+ 		cpuhp_remove_multi_state(CPUHP_ZCOMP_PREPARE);
+ 		return -EBUSY;
+ 	}
+

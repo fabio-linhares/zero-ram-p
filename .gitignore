@@ -1,0 +1,25 @@
+# Build artifacts and binaries
+*.o
+*.ko
+*.mod.c
+*.mod
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+*.deb
+*.pkg.tar.*
+*.iso
+*.qcow2
+
+# Kernel source trees (downloaded or cloned)
+linux-*/
+linux/
+build/
+
+# Temporary run logs and machine-specific profiles
+results/*.tmp
+results/raw_telemetry_*.csv
+results/machine_profile_*.env
+!results/machine_profile.env.example
+!results/.gitkeep
